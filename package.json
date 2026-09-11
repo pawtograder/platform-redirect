@@ -1,0 +1,34 @@
+{
+  "private": true,
+  "name": "@pawtograder/platform-redirect",
+  "version": "0.0.1",
+  "description": "Catch-all redirector for the retired app.pawtograder.com origin",
+  "author": {
+    "name": "Jonathan Bell",
+    "email": "jon@jonbell.net"
+  },
+  "license": "GPL-3.0-only",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint && prettier --check .",
+    "format": "prettier --write .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "^15.5.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.2.0",
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "eslint": "^9.18.0",
+    "eslint-config-next": "^15.5.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.3"
+  }
+}

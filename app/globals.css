@@ -1,0 +1,155 @@
+:root {
+  --bg: #fafafa;
+  --panel: #ffffff;
+  --border: #e4e4e7;
+  --text: #18181b;
+  --muted: #52525b;
+  --hover: #f4f4f5;
+  --accent: #18181b;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #09090b;
+    --panel: #18181b;
+    --border: #27272a;
+    --text: #fafafa;
+    --muted: #a1a1aa;
+    --hover: #27272a;
+    --accent: #fafafa;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background: var(--bg);
+  color: var(--text);
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+  line-height: 1.5;
+}
+
+.card {
+  width: 100%;
+  max-width: 30rem;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 0.875rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  width: 4.5rem;
+  height: auto;
+  margin: 0 auto 1.25rem;
+  display: block;
+}
+
+/* Two logo variants ship in the bundle; CSS picks one so there is no flash
+   of the wrong artwork while JS loads (this page is fully static). */
+.logo-dark {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  .logo-light {
+    display: none;
+  }
+  .logo-dark {
+    display: block;
+  }
+}
+
+h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.375rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.lede {
+  margin: 0 0 1.5rem;
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.schools {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  text-align: left;
+}
+
+.school {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.625rem;
+  color: inherit;
+  text-decoration: none;
+  transition:
+    background-color 0.12s ease,
+    border-color 0.12s ease;
+}
+
+.school:hover,
+.school:focus-visible {
+  background: var(--hover);
+  border-color: var(--muted);
+}
+
+.school-name {
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+.school-detail {
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
+.chevron {
+  flex: none;
+  color: var(--muted);
+}
+
+.destination {
+  margin: 1.5rem 0 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.8125rem;
+  word-break: break-all;
+}
+
+.destination code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8125rem;
+  color: var(--text);
+}
+
+.empty {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
