@@ -1,0 +1,11 @@
+{
+  "$comment": "Registry of self-hosted Pawtograder deployments. Adding a school here is the only change needed; scripts/build.mjs renders it into both output pages. Order is preserved in the picker.",
+  "tenants": [
+    {
+      "id": "northeastern",
+      "name": "Northeastern University",
+      "detail": "Khoury College of Computer Sciences",
+      "origin": "https://pawtograder.khoury.northeastern.edu"
+    }
+  ]
+}

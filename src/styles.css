@@ -5,7 +5,6 @@
   --text: #18181b;
   --muted: #52525b;
   --hover: #f4f4f5;
-  --accent: #18181b;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -16,8 +15,16 @@
     --text: #fafafa;
     --muted: #a1a1aa;
     --hover: #27272a;
-    --accent: #fafafa;
   }
+}
+
+/*
+  Set on <html> in the markup and removed by the head script once it has
+  decided to show the picker. A returning visitor is redirected while this is
+  still applied, so they never see a frame of the interstitial.
+*/
+.resolving body {
+  visibility: hidden;
 }
 
 * {
@@ -62,8 +69,8 @@ body {
   display: block;
 }
 
-/* Two logo variants ship in the bundle; CSS picks one so there is no flash
-   of the wrong artwork while JS loads (this page is fully static). */
+/* Both variants ship in the page; CSS picks one so there is no flash of the
+   wrong artwork and no JS involved in theming. */
 .logo-dark {
   display: none;
 }
