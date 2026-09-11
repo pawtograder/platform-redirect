@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en" class="resolving">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pawtograder — choose your school</title>
+    <meta name="description" content="Pawtograder is now hosted by each school. Choose yours to continue." />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/styles.css" />
+
+    <!--
+      This runs in <head>, before the body is parsed, so a visitor who has
+      already chosen a school is redirected without the picker ever painting.
+      Until it decides, `html.resolving` keeps the body hidden (see styles.css);
+      the <noscript> below un-hides it for clients that never run this at all.
+    -->
+    <script>
+      (function () {
+        "use strict";
+
+        var TENANTS = /*__TENANTS__*/ [];
+        var STORAGE_KEY = "ptg_school";
+        var RESET_PATH = "/change-school";
+
+        /**
+         * localStorage throws rather than returning null in some privacy
+         * modes and in sandboxed iframes, which would otherwise take the
+         * whole page down and strand the visitor on a blank screen.
+         */
+        function readChoice() {
+          try {
+            return window.localStorage.getItem(STORAGE_KEY);
+          } catch (e) {
+            return null;
+          }
+        }
+
+        function writeChoice(id) {
+          try {
+            window.localStorage.setItem(STORAGE_KEY, id);
+          } catch (e) {
+            /* Choice just will not be remembered; the redirect still works. */
+          }
+        }
+
+        function clearChoice() {
+          try {
+            window.localStorage.removeItem(STORAGE_KEY);
+          } catch (e) {
+            /* Nothing stored, nothing to clear. */
+          }
+        }
+
+        function tenantById(id) {
+          for (var i = 0; i < TENANTS.length; i++) {
+            if (TENANTS[i].id === id) return TENANTS[i];
+          }
+          return null;
+        }
+
+        /**
+         * The path to carry over to the chosen school.
+         *
+         * GitHub Pages serves 404.html for any path it has no file for while
+         * leaving the requested URL in the address bar, which is what makes a
+         * static catch-all possible: location here is still the URL the user
+         * actually asked for.
+         *
+         * Leading slashes are collapsed so that a request for "//foo" does
+         * not produce a doubled slash in the destination path. This is
+         * cosmetic, not a safety check -- the origin is always prepended from
+         * the registry, so a crafted path cannot retarget the redirect.
+         */
+        function requestedPath() {
+          var path = window.location.pathname.replace(/^\/+/, "/");
+          if (path === RESET_PATH) return "/";
+          return path + window.location.search + window.location.hash;
+        }
+
+        function showPicker() {
+          document.documentElement.classList.remove("resolving");
+        }
+
+        var isReset = window.location.pathname === RESET_PATH;
+        if (isReset) {
+          clearChoice();
+        }
+
+        var target = requestedPath();
+
+        // Returning visitor: forward immediately, before anything renders.
+        if (!isReset) {
+          var remembered = tenantById(readChoice());
+          if (remembered) {
+            window.location.replace(remembered.origin + target);
+            return;
+          }
+          // A stored id that is no longer in the registry (school removed or
+          // renamed) is dropped so it is not re-checked on every later visit.
+          if (readChoice()) {
+            clearChoice();
+          }
+        }
+
+        // Everyone else gets the picker. Wire it up once the markup exists.
+        document.addEventListener("DOMContentLoaded", function () {
+          var links = document.querySelectorAll("[data-school]");
+          for (var i = 0; i < links.length; i++) {
+            (function (link) {
+              var tenant = tenantById(link.getAttribute("data-school"));
+              if (!tenant) return;
+
+              // Built at runtime because only the client knows the requested
+              // path. The href rendered at build time points at the school's
+              // root, so this degrades to a working link without JS.
+              link.setAttribute("href", tenant.origin + target);
+              link.addEventListener("click", function () {
+                writeChoice(tenant.id);
+              });
+            })(links[i]);
+          }
+
+          var destination = document.getElementById("destination");
+          if (destination && target !== "/") {
+            destination.querySelector("code").textContent = target;
+            destination.hidden = false;
+          }
+        });
+
+        showPicker();
+      })();
+    </script>
+    <noscript>
+      <style>
+        .resolving body {
+          visibility: visible;
+        }
+      </style>
+    </noscript>
+  </head>
+  <body>
+    <main class="card">
+      <img src="/Logo-Light.png" alt="" class="logo logo-light" width="72" height="72" />
+      <img src="/Logo-Dark.png" alt="" class="logo logo-dark" width="72" height="72" />
+
+      <h1>Choose your school</h1>
+      <p class="lede">
+        Pawtograder is now hosted by each school on its own site. Pick yours to continue &mdash; we&rsquo;ll remember it
+        next time.
+      </p>
+
+      <div class="schools"><!--__SCHOOL_BUTTONS__--></div>
+
+      <p class="destination" id="destination" hidden>You&rsquo;ll be taken to <code></code> on the site you choose.</p>
+    </main>
+  </body>
+</html>
